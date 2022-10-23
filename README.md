@@ -35,10 +35,10 @@ To add a new LSP
 First Enter:
 
 ```
-:Mason
+:LspInstallInfo
 ```
 
-and press `i` on the Language Server you wish to install
+use jk or arrow keys to move through the list of LSPs and press `i` on the Language Server you wish to install
 
 Next you will need to add the server to this list: [servers](https://github.com/LunarVim/nvim-basic-ide/blob/0e65f504f634026f5765ce6a092612d385d6306d/lua/user/lsp/mason.lua#L1)
 
