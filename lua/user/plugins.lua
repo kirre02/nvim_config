@@ -80,15 +80,15 @@ return packer.startup(function(use)
   use { "jose-elias-alvarez/null-ls.nvim", commit = "ff40739e5be6581899b43385997e39eecdbf9465" } -- for formatters and linters
   use { "RRethy/vim-illuminate", commit = "c82e6d04f27a41d7fdcad9be0bce5bb59fcb78e5" }
   use { "folke/trouble.nvim", commit="929315ea5f146f1ce0e784c76c943ece6f36d786"}  
+  
   -- Telescope
-  use { "nvim-telescope/telescope.nvim", commit = "d96eaa914aab6cfc4adccb34af421bdd496468b0" }
+  use { "nvim-telescope/telescope.nvim", commit = "090b68754238560695809cd8f36ffa53124bbc6d" }
 
   -- Treesitter
-  use {
-    "nvim-treesitter/nvim-treesitter", commit = "518e27589c0463af15463c9d675c65e464efc2fe"}
+  use { "nvim-treesitter/nvim-treesitter", commit = "e7bdcee167ae41295a3e99ad460ae80d2bb961d7" }
 
   -- Git
-  use { "lewis6991/gitsigns.nvim", commit = "9110ea15a134b421723cc45c3a8775a6491df39a" }
+  use { "lewis6991/gitsigns.nvim", commit = "d3a8ba0b0d34bbac482b963e52b346065169fa20" }
   use {"kdheepak/lazygit.nvim", commit = "9c73fd69a4c1cb3b3fc35b741ac968e331642600"}
   -- DAP
   use { "mfussenegger/nvim-dap", commit = "014ebd53612cfd42ac8c131e6cec7c194572f21d" }
