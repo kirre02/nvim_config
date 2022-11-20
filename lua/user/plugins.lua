@@ -86,7 +86,6 @@ return packer.startup(function(use)
 
   -- Treesitter
   use { "nvim-treesitter/nvim-treesitter", commit = "e7bdcee167ae41295a3e99ad460ae80d2bb961d7" }
-
   -- Git
   use { "lewis6991/gitsigns.nvim", commit = "d3a8ba0b0d34bbac482b963e52b346065169fa20" }
   use {"kdheepak/lazygit.nvim", commit = "9c73fd69a4c1cb3b3fc35b741ac968e331642600"}

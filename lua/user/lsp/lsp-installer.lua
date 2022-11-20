@@ -15,6 +15,7 @@ local servers = {
   "dockerls",
   "gopls",
   "rust_analyzer",
+  "terraformls",
 }
 
 lsp_installer.setup()
