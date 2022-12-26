@@ -73,8 +73,8 @@ keymap("n", "<leader>fp", ":Telescope projects<CR>", opts)
 keymap("n", "<leader>fb", ":Telescope buffers<CR>", opts)
 
 -- buffers
-keymap("n","<leader>bp",":bprevious", opts)
-keymap("n","<leader>bn",":bnext", opts)
+keymap("n","<leader>p",":bprevious<CR>", opts)
+keymap("n","<leader>n",":bnext<CR>", opts)
 
 -- Git
 keymap("n", "<leader>gg", "<cmd>lua _LAZYGIT_TOGGLE()<CR>", opts)
