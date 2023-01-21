@@ -62,6 +62,7 @@ return packer.startup(function(use)
   use { "lunarvim/darkplus.nvim", commit = "2584cdeefc078351a79073322eb7f14d7fbb1835" }
   use {"glepnir/zephyr-nvim", commit = "fd8681d31e83a2a28631858dc951bf2c6f20578b"}
   use {"navarasu/onedark.nvim", commit = "6c72a9c5681e0ce00e75848d9426b59ba21539a7"}
+  use {"ellisonleao/gruvbox.nvim", commit="5ac400bbd7bbe5d5911a79c45347df6d3afd388e"}
   -- cmp plugins
   use { "hrsh7th/nvim-cmp", commit = "df6734aa018d6feb4d76ba6bda94b1aeac2b378a" } -- The completion plugin
   use { "hrsh7th/cmp-buffer", commit = "62fc67a2b0205136bc3e312664624ba2ab4a9323" } -- buffer completions
