@@ -12,7 +12,8 @@ local servers = {
   "gopls",
   "rust_analyzer",
   "terraformls",
-  "clangd"
+  "clangd",
+  "rnix-lsp"
 }
 
 local settings = {
