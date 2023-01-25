@@ -1,6 +1,5 @@
 local servers = {
   "sumneko_lua",
-  "null-ls",
   "cssls",
   "html",
   "tsserver",
@@ -13,7 +12,8 @@ local servers = {
   "rust_analyzer",
   "terraformls",
   "clangd",
-  "rnix-lsp"
+  "rnix-lsp",
+  "sumneko_lua"
 }
 
 local settings = {

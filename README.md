@@ -40,13 +40,13 @@ First Enter:
 
 use jk or arrow keys to move through the list of LSPs and press `i` on the Language Server you wish to install
 
-Next you will need to add the server to this list: [servers](https://github.com/kirre02/nvim_config/blob/main/lua/user/lsp/lsp-installer.lua)
+Next you will need to add the server to this list: [servers](https://github.com/kirre02/nvim_config/blob/main/lua/user/lsp/mason.lua)
 
 Note: Builtin LSP doesn't contain all lsps from [nvim-lspconfig](https://github.com/neovim/nvim-lspconfig/blob/master/doc/server_configurations.md#terraform_lsp).
 
 If you want to install any from there, for example terraform_lsp(which adds more functionality than terraformls, like complete resource listing),
 
-1. You can add the lsp name in the [lsp block](https://github.com/kirre02/nvim_config/blob/main/lua/user/lsp/lsp-installer.lua)
+1. You can add the lsp name in the [lsp block](https://github.com/kirre02/nvim_config/blob/main/lua/user/lsp/mason.lua)
 
 ```lua
 -- lua/usr/lsp/lsp-installer.lua
