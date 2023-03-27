@@ -29,6 +29,10 @@ local settings = {
   max_concurrent_installers = 4,
 }
 
+-- Show line diagnostics automatically in hover window
+vim.o.updatetime = 250
+vim.cmd [[autocmd! CursorHold,CursorHoldI * lua vim.diagnostic.open_float(nil, {focus=false})]]
+
 require("mason").setup(settings)
 require("mason-lspconfig").setup({
   ensure_installed = servers,
