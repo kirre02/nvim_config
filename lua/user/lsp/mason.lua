@@ -12,7 +12,6 @@ local servers = {
   "rust_analyzer",
   "terraformls",
   "clangd",
-  "rnix-lsp",
   "sumneko_lua"
 }
 

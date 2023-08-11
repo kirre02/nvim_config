@@ -56,12 +56,17 @@ return packer.startup(function(use)
   use { "lewis6991/impatient.nvim", commit = "969f2c5c90457612c09cf2a13fee1adaa986d350" }
   use { "lukas-reineke/indent-blankline.nvim", commit = "6177a59552e35dfb69e1493fd68194e673dc3ee2" }
   use { "goolord/alpha-nvim", commit = "ef27a59e5b4d7b1c2fe1950da3fe5b1c5f3b4c94" }
+  use { "norcalli/nvim-colorizer.lua", commit = "174b7a67ce384318f7500e0d256322e1cbba5e5b" }
+  use { "folke/noice.nvim", commit = "894db25ec726d32047799d4d0a982b701bec453b" }
+  use { "rcarriga/nvim-notify", commit ="ea9c8ce7a37f2238f934e087c255758659948e0f" }
 
   -- Colorschemes
   use { "folke/tokyonight.nvim", commit = "66bfc2e8f754869c7b651f3f47a2ee56ae557764" }
   use { "lunarvim/darkplus.nvim", commit = "13ef9daad28d3cf6c5e793acfc16ddbf456e1c83" }
   use { "navarasu/onedark.nvim", commit = "6c72a9c5681e0ce00e75848d9426b59ba21539a7" }
   use { "ellisonleao/gruvbox.nvim", commit = "e863942494d7c72a7c8d2c54cf651f28fc5a76ab" }
+  use { "catppuccin/nvim", commit = "490078b1593c6609e6a50ad5001e7902ea601824" }
+  
   -- cmp plugins
   use { "hrsh7th/nvim-cmp", commit = "df6734aa018d6feb4d76ba6bda94b1aeac2b378a" } -- The completion plugin
   use { "hrsh7th/cmp-buffer", commit = "62fc67a2b0205136bc3e312664624ba2ab4a9323" } -- buffer completions
@@ -69,6 +74,7 @@ return packer.startup(function(use)
   use { "saadparwaiz1/cmp_luasnip", commit = "a9de941bcbda508d0a45d28ae366bb3f08db2e36" } -- snippet completions
   use { "hrsh7th/cmp-nvim-lsp", commit = "affe808a5c56b71630f17aa7c38e15c59fd648a8" }
   use { "hrsh7th/cmp-nvim-lua", commit = "d276254e7198ab7d00f117e88e223b4bd8c02d21" }
+  use { "onsails/lspkind-nvim", commit = "57610d5ab560c073c465d6faf0c19f200cb67e6e"}
 
   -- snippets
   use { "L3MON4D3/LuaSnip", commit = "79b2019c68a2ff5ae4d732d50746c901dd45603a" } --snippet engine

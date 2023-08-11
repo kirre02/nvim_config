@@ -1,25 +1,35 @@
-local status_ok, telescope = pcall(require, "telescope")
-if not status_ok then
-  return
-end
-
-local actions = require "telescope.actions"
+local telescope = require 'telescope'
 
 telescope.setup {
-  defaults = {
-
-    prompt_prefix = " ",
-    selection_caret = " ",
-    path_display = { "smart" },
-    file_ignore_patterns = { ".git/", "node_modules" },
-
-    mappings = {
-      i = {
-        ["<Down>"] = actions.cycle_history_next,
-        ["<Up>"] = actions.cycle_history_prev,
-        ["<C-j>"] = actions.move_selection_next,
-        ["<C-k>"] = actions.move_selection_previous,
-      },
-    },
-  },
+    defaults = {
+        file_ignore_patterns = {
+            "node_modules/.*",
+            "secret.d/.*",
+            "%.pem"
+        }
+    }
 }
+
+telescope.load_extension('notify')
+
+local map = vim.api.nvim_set_keymap
+
+local options = { noremap = true }
+
+-- Builtin
+map('n', '<leader>fg', '<CMD>lua require("telescope.builtin").git_files{}<CR>', options)
+map('n', '<leader>ff', '<CMD>lua require("telescope.builtin").find_files{ hidden = true }<CR>', options)
+map('n', '<leader>fl', '<CMD>lua require("telescope.builtin").live_grep()<CR>', options)
+map('n', '<leader>fb', '<CMD>lua require("telescope.builtin").buffers()<CR>', options)
+map('n', '<leader>fh', '<CMD>lua require("telescope.builtin").help_tags()<CR>', options)
+map('n', '<leader>fd', '<CMD>lua require("telescope.builtin").diagnostics()<CR>', options)
+map('n', '<leader>fr', '<CMD>lua require("telescope.builtin").registers()<CR>', options)
+
+-- Language Servers
+map('n', '<leader>lsd', '<CMD>lua require("telescope.builtin").lsp_definitions{}<CR>', options)
+map('n', '<leader>lsi', '<CMD>lua require("telescope.builtin").lsp_implementations{}<CR>', options)
+map('n', '<leader>lsl', '<CMD>lua require("telescope.builtin").lsp_code_actions{}<CR>', options)
+map('n', '<leader>lst', '<CMD>lua require("telescope.builtin").lsp_type_definitions{}<CR>', options)
+
+-- Extensions
+map('n', '<leader>fn', '<CMD>lua require("telescope").extensions.notify.notify()<CR>', options)
