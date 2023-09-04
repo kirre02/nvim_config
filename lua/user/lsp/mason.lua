@@ -12,7 +12,6 @@ local servers = {
   "rust_analyzer",
   "terraformls",
   "clangd",
-  "sumneko_lua"
 }
 
 local settings = {

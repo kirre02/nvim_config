@@ -57,7 +57,8 @@ return packer.startup(function(use)
   use { "lukas-reineke/indent-blankline.nvim", commit = "6177a59552e35dfb69e1493fd68194e673dc3ee2" }
   use { "goolord/alpha-nvim", commit = "ef27a59e5b4d7b1c2fe1950da3fe5b1c5f3b4c94" }
   use { "norcalli/nvim-colorizer.lua", commit = "174b7a67ce384318f7500e0d256322e1cbba5e5b" }
-  use { "folke/noice.nvim", commit = "894db25ec726d32047799d4d0a982b701bec453b" }
+  use { "folke/noice.nvim", commit = "53d613cd0031e83987964947b1bad8b5047c9d0e" }
+  use { "MunifTanjim/nui.nvim", commit = "aa1b4c1e05983ff7debd2b4b2788651db099de2f"}
   use { "rcarriga/nvim-notify", commit ="ea9c8ce7a37f2238f934e087c255758659948e0f" }
 
   -- Colorschemes
