@@ -35,7 +35,7 @@ To add a new LSP
 First Enter:
 
 ```
-:LspInstallInfo
+:Mason
 ```
 
 use jk or arrow keys to move through the list of LSPs and press `i` on the Language Server you wish to install
