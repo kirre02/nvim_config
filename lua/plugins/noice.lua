@@ -1,7 +1,10 @@
 return {
     {
         "folke/noice.nvim",
-        "rcarriga/nvim-notify",
+        dependencies = {
+            "MunifTanjim/nui.nvim",
+            "rcarriga/nvim-notify",
+        },
         event = "VeryLazy",
         config = function()
             local noice = require 'noice'
@@ -39,6 +42,7 @@ return {
 
             notify.setup({
                 background_colour = "#1e222a",
+                merge_duplicates = false,
                 render = "minimal",
                 stages = "static",
                 timeout = 5000,
