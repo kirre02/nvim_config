@@ -4,88 +4,163 @@ return {
         event = { "BufReadPost" },
         cmd = { "LspInfo", "LspInstall", "LspUninstall", "Mason" },
         dependencies = {
+            -- LSP installer plugins
             "williamboman/mason.nvim",
             "williamboman/mason-lspconfig.nvim",
+            "WhoIsSethDaniel/mason-tool-installer.nvim",
+            -- Integrate blink w/ LSP
             "saghen/blink.cmp",
-            "nvimtools/none-ls.nvim",
-            "folke/neodev.nvim",
-            { "j-hui/fidget.nvim", tag = "legacy" },
+            -- Progress indicator for LSP
+            { "j-hui/fidget.nvim" },
         },
         config = function()
-            local null_ls = require("null-ls")
+            local map_lsp_keybinds = require("kirre.keymaps").map_lsp_keybinds
 
-            require("neodev").setup()
-            require("mason").setup({ ui = { border = "rounded" } })
-            require("mason-lspconfig").setup({ automatic_installation = { exclude = { "ocamllsp", "gleam" } } })
+            -- Default LSP handlers with rounded borders
+            local default_handlers = {
+                ["textDocument/hover"] = vim.lsp.with(vim.lsp.handlers.hover, { border = "rounded" }),
+                ["textDocument/signatureHelp"] = vim.lsp.with(vim.lsp.handlers.signature_help, { border = "rounded" }),
+            }
 
-            -- Enable `blink.cmp` capabilities for LSP
-            local capabilities = require("blink.cmp").get_lsp_capabilities()
+            local ts_ls_inlay_hints = {
+                includeInlayEnumMemberValueHints = true,
+                includeInlayFunctionLikeReturnTypeHints = true,
+                includeInlayFunctionParameterTypeHints = true,
+                includeInlayParameterNameHints = "all",
+                includeInlayParameterNameHintsWhenArgumentMatchesName = true,
+                includeInlayPropertyDeclarationTypeHints = true,
+                includeInlayVariableTypeHints = true,
+                includeInlayVariableTypeHintsWhenTypeMatchesName = true,
+            }
 
+            -- on_attach: call your custom keymap binding function
+            local on_attach = function(_client, buffer_number)
+                map_lsp_keybinds(buffer_number)
+            end
+
+            -- List your LSP servers here.
             local servers = {
                 bashls = {},
                 cssls = {},
+                eslint = {
+                    autostart = false,
+                    cmd = { "vscode-eslint-language-server", "--stdio", "--max-old-space-size=12288" },
+                    settings = { format = false },
+                },
                 html = {},
                 jsonls = {},
-                lua_ls = { settings = { Lua = { workspace = { checkThirdParty = false }, telemetry = { enabled = false } } } },
-                prismals = {},
+                lua_ls = {
+                    settings = {
+                        Lua = {
+                            runtime = { version = "LuaJIT" },
+                            workspace = {
+                                checkThirdParty = false,
+                                library = {
+                                    "${3rd}/luv/library",
+                                    unpack(vim.api.nvim_get_runtime_file("", true)),
+                                },
+                            },
+                            telemetry = { enabled = false },
+                        },
+                    },
+                },
+                marksman = {},
+                nil_ls = {},
                 pyright = {},
-                solidity = {},
-                ts_ls = {},
+                sqlls = {},
+                gopls = {},
+                tailwindcss = {
+                    filetypes = { "typescriptreact", "javascriptreact", "html", "svelte" },
+                },
+                ts_ls = {
+                    on_attach = function(client, buffer_number)
+                        require("twoslash-queries").attach(client, buffer_number)
+                        return on_attach(client, buffer_number)
+                    end,
+                    settings = {
+                        maxTsServerMemory = 12288,
+                        typescript = { inlayHints = ts_ls_inlay_hints },
+                        javascript = { inlayHints = ts_ls_inlay_hints },
+                    },
+                },
                 yamlls = {},
+                svelte = {},
+                rust_analyzer = {
+                    check = { command = "clippy", features = "all" },
+                },
             }
 
-            local function lsp_keymaps(bufnr)
-                local opts = { noremap = true, silent = true }
-                local keymap = vim.api.nvim_buf_set_keymap
-                keymap(bufnr, "n", "gD", "<cmd>lua vim.lsp.buf.declaration()<CR>", opts)
-                keymap(bufnr, "n", "gd", "<cmd>lua vim.lsp.buf.definition()<CR>", opts)
-                keymap(bufnr, "n", "K", "<cmd>lua vim.lsp.buf.hover()<CR>", opts)
-                keymap(bufnr, "n", "gI", "<cmd>lua vim.lsp.buf.implementation()<CR>", opts)
-                keymap(bufnr, "n", "gr", "<cmd>lua vim.lsp.buf.references()<CR>", opts)
-                keymap(bufnr, "n", "gl", "<cmd>lua vim.diagnostic.open_float()<CR>", opts)
-                keymap(bufnr, "n", "<leader>li", "<cmd>LspInfo<cr>", opts)
-                keymap(bufnr, "n", "<leader>lI", "<cmd>Mason<cr>", opts)
-                keymap(bufnr, "n", "<leader>la", "<cmd>lua vim.lsp.buf.code_action()<cr>", opts)
-                keymap(bufnr, "n", "<leader>lr", "<cmd>lua vim.lsp.buf.rename()<cr>", opts)
-            end
+            local formatters = {
+                prettierd = {},
+                stylua = {},
+            }
 
-            local on_attach = function(client, bufnr)
-                lsp_keymaps(bufnr)
+            local manually_installed_servers = {"rust_analyzer" }
+            local mason_tools_to_install = vim.tbl_keys(vim.tbl_deep_extend("force", {}, servers, formatters))
+            local ensure_installed = vim.tbl_filter(function(name)
+                return not vim.tbl_contains(manually_installed_servers, name)
+            end, mason_tools_to_install)
 
-                -- Format on save if the LSP supports it
-                if client.supports_method("textDocument/formatting") then
-                    vim.api.nvim_create_autocmd("BufWritePre", {
-                        buffer = bufnr,
-                        callback = function()
-                            vim.lsp.buf.format({ async = false })
-                        end,
-                    })
-                end
-            end
+            require("mason-tool-installer").setup({
+                auto_update = true,
+                run_on_start = true,
+                start_delay = 3000,
+                debounce_hours = 12,
+                ensure_installed = ensure_installed,
+            })
 
+            -- Use blink.cmp to extend LSP capabilities.
+            -- This replaces the cmp-nvim-lsp integration.
+            local capabilities = require("blink.cmp").get_lsp_capabilities()
+
+            -- Setup each LSP server. We merge in any server-specific capabilities by passing
+            -- the existing config.capabilities to blink.cmp.get_lsp_capabilities.
             for name, config in pairs(servers) do
                 require("lspconfig")[name].setup({
+                    autostart = config.autostart,
+                    cmd = config.cmd,
                     capabilities = capabilities,
+                    filetypes = config.filetypes,
+                    handlers = vim.tbl_deep_extend("force", {}, default_handlers, config.handlers or {}),
                     on_attach = on_attach,
                     settings = config.settings,
+                    root_dir = config.root_dir,
                 })
             end
 
-            -- Setup `null-ls`
-            null_ls.setup({
-                border = "rounded",
-                sources = {
-                    null_ls.builtins.formatting.prettier,
-                    null_ls.builtins.formatting.stylua,
-                    --  null_ls.builtins.diagnostics.eslint_d.with({
-                    --     condition = function(utils)
-                    --       return utils.root_has_file({ ".eslintrc.js", ".eslintrc.json" })
-                    --  end,
-                    -- }),
-                },
-            })
+            -- Setup Mason for managing external LSP servers
+            require("mason").setup({ ui = { border = "rounded" } })
+            require("mason-lspconfig").setup()
 
+            -- Configure borders for LspInfo UI and diagnostics
+            require("lspconfig.ui.windows").default_options.border = "rounded"
             vim.diagnostic.config({ float = { border = "rounded" } })
         end,
     },
+    {
+        "stevearc/conform.nvim",
+        event = { "BufWritePre" },
+        cmd = { "ConformInfo" },
+        opts = {
+            notify_on_error = false,
+            default_format_opts = {
+                async = true,
+                timeout_ms = 500,
+                lsp_format = "fallback",
+            },
+            format_after_save = {
+                async = true,
+                timeout_ms = 500,
+                lsp_format = "fallback",
+            },
+            formatters_by_ft = {
+                javascript = { "biome" },
+                typescript = { "biome" },
+                typescriptreact = { "biome" },
+                svelte = { "prettierd", "prettier " },
+                lua = { "stylua" },
+            },
+        },
+    },
 }
+

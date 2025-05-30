@@ -1,49 +1,120 @@
 return {
-    "saghen/blink.cmp",
-    opts = {
-        sources = {
-            default = { 'lsp', 'path', 'snippets' },
-            providers = {
-                lsp = {
-                    name = "lsp",
-                    enabled = true,
-                    module = "blink.cmp.sources.lsp",
-                    min_keyword_length = 2,
-                    -- When linking markdown notes, I would get snippets and text in the
-                    -- suggestions, I want those to show only if there are no LSP
-                    -- suggestions
-                    --
-                    -- Enabled fallbacks as this seems to be working now
-                    -- Disabling fallbacks as my snippets wouldn't show up when editing
-                    -- lua files
-                    -- fallbacks = { "snippets", "buffer" },
-                    score_offset = 90, -- the higher the number, the higher the priority
+    {
+        "saghen/blink.cmp",
+        dependencies = {
+            "rafamadriz/friendly-snippets",
+            "onsails/lspkind.nvim",
+            "nvim-tree/nvim-web-devicons",
+        },
+        version = "*",
+        opts = {
+            appearance = {
+                use_nvim_cmp_as_default = true,
+                nerd_font_variant = "mono",
+            },
+            completion = {
+                documentation = {
+                    auto_show = true,
+                    window = {
+                        border = "rounded",
+                    },
                 },
-                path = {
-                    name = "Path",
-                    module = "blink.cmp.sources.path",
-                    score_offset = 25,
-                    -- When typing a path, I would get snippets and text in the
-                    -- suggestions, I want those to show only if there are no path
-                    -- suggestions
-                    fallbacks = { "snippets", "buffer" },
-                    min_keyword_length = 2,
-                    opts = {
-                        trailing_slash = false,
-                        label_trailing_slash = true,
-                        get_cwd = function(context)
-                            return vim.fn.expand(("#%d:p:h"):format(context.bufnr))
-                        end,
-                        show_hidden_files_by_default = true,
+                ghost_text = { enabled = true },
+                menu = {
+                    border = "rounded",
+                    draw = {
+                        columns = {
+                            { "label",      "label_description", gap = 1 },
+                            { "kind_icon",  "kind",              gap = 1 },
+                            { "source_name" },
+                        },
+                        components = {
+                            source_name = {
+                                text = function(ctx)
+                                    return "[" .. ctx.source_name .. "]"
+                                end,
+                            },
+                            kind_icon = {
+                                ellipsis = false,
+                                text = function(ctx)
+                                    local icon = ctx.kind_icon
+                                    if vim.tbl_contains({ "Path" }, ctx.source_name) then
+                                        local dev_icon, _ = require("nvim-web-devicons").get_icon(ctx.label)
+                                        if dev_icon then
+                                            icon = dev_icon
+                                        end
+                                    elseif ctx.source_name == "Copilot" then
+                                        icon = ""
+                                    else
+                                        icon = require("lspkind").symbolic(ctx.kind, {
+                                            mode = "symbol",
+                                        })
+                                    end
+                                    return icon .. ctx.icon_gap
+                                end,
+                                highlight = function(ctx)
+                                    local hl = ctx.kind_hl
+                                    if vim.tbl_contains({ "Path" }, ctx.source_name) then
+                                        local dev_icon, dev_hl = require("nvim-web-devicons").get_icon(ctx.label)
+                                        if dev_icon then
+                                            hl = dev_hl
+                                        end
+                                    end
+                                    return hl
+                                end,
+                            },
+                        },
                     },
                 },
             },
-        },
-        keymap = {
-            preset = "default",
-            ["<Enter>"] = { "accept", "fallback" },
-            ["<Tab>"] = { "select_next", "snippet_forward", "fallback" },
-            ["<S-Tab>"] = { "select_prev", "snippet_backward", "fallback" },
+            keymap = {
+                preset = "default",
+                ["<C-k>"] = { "select_prev", "fallback" },
+                ["<C-j>"] = { "select_next", "fallback" },
+                ["<C-u>"] = { "scroll_documentation_up", "fallback" },
+                ["<C-d>"] = { "scroll_documentation_down", "fallback" },
+                ["<Tab>"] = {
+                    function(cmp)
+                        if cmp.is_menu_visible() then
+                            return cmp.select_next()
+                        elseif vim.snippet.active() then
+                            return vim.snippet.jump(1)
+                        else
+                            return
+                        end
+                    end,
+                    "fallback",
+                },
+                ["<S-Tab>"] = {
+                    function(cmp)
+                        if cmp.is_menu_visible() then
+                            return cmp.select_prev()
+                        elseif vim.snippet.active() then
+                            return vim.snippet.jump(-1)
+                        else
+                            return
+                        end
+                    end,
+                    "fallback",
+                },
+                ["<C-c>"] = { "cancel" },
+                ["<CR>"] = { "accept", "fallback" },
+            },
+            signature = { enabled = true },
+            sources = {
+                default = { "lsp", "path", "snippets", "buffer" },
+                providers = {
+                    buffer = {
+                        max_items = 5,
+                    },
+                    lsp = {
+                        score_offset = 5,
+                    },
+                    path = {
+                        max_items = 3,
+                    },
+                },
+            },
         },
     },
 }
